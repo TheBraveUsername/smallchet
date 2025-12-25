@@ -1,5 +1,6 @@
 const WebSocket = require("ws");
 const http = require("http");
+const fs = require("fs").promises;
 
 // Обязательно для Render!
 const PORT = process.env.PORT || 10000;
@@ -39,3 +40,4 @@ wss.on("connection", (ws) => {
 server.listen(PORT, HOST, () => {
   console.log(`Server running on http://${HOST}:${PORT}`);
 });
+
