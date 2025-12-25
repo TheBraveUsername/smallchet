@@ -26,11 +26,15 @@ const wss = new WebSocket.Server({ server });
 
 wss.on("connection", (ws) => {
   console.log("New client connected!");
+  let clientUsername = "Гость";
+  
   ws.send(JSON.stringify({ username: "Сервер", text: "Вы успешно подключились!" }));
 
   ws.on("message", (msg) => {
     try {
       const messageData = JSON.parse(msg.toString());
+      clientUsername = messageData.username || "Гость";
+      
       wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
           client.send(JSON.stringify(messageData));
@@ -43,7 +47,10 @@ wss.on("connection", (ws) => {
 
   ws.on("close", () => {
     console.log("Client disconnected!");
-    const disconnectMsg = { username: "Сервер", text: `${messageData?.username || "Пользователь"} отключился` };
+    const disconnectMsg = { 
+      username: "Сервер", 
+      text: `${clientUsername} отключился` 
+    };
     wss.clients.forEach((client) => {
       if (client.readyState === WebSocket.OPEN && client !== ws) {
         client.send(JSON.stringify(disconnectMsg));
@@ -55,6 +62,7 @@ wss.on("connection", (ws) => {
 server.listen(PORT, HOST, () => {
   console.log(`Server running on http://${HOST}:${PORT}`);
 });
+
 
 
 
