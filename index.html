@@ -16,7 +16,7 @@
   <button onclick="sendMessage()">Отправить</button>
 
   <script>
-    const socket = new WebSocket("ws://localhost:8090");
+    const socket = new WebSocket("wss://your-app-name.onrender.com");
     const messages = document.getElementById('messages');
     const input = document.getElementById('messageInput');
     const nameInput = document.getElementById('nameInput');
@@ -61,3 +61,4 @@
   </script>
 </body>
 </html>
+
