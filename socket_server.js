@@ -2,15 +2,14 @@ const WebSocket = require("ws");
 const http = require("http");
 const fs = require("fs").promises;
 
-// Обязательно для Render!
-const PORT = process.env.PORT || 10000;
-const HOST = '0.0.0.0';  // НЕ localhost!
+const PORT = 10000;
+const HOST = '0.0.0.0';
 
 const server = http.createServer((req, res) => {
-  // Обслуживаем index.html
   if (req.url === '/' || req.url === '/index.html') {
-    res.writeHead(200, { 'Content-Type': 'text/html' });
-    res.end(fs.readFileSync('index.html', 'utf8'));
+    const html = fs.readFileSync('index.html', 'utf8');
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+    res.end(html);
   } else {
     res.writeHead(404);
     res.end();
@@ -40,4 +39,5 @@ wss.on("connection", (ws) => {
 server.listen(PORT, HOST, () => {
   console.log(`Server running on http://${HOST}:${PORT}`);
 });
+
 
