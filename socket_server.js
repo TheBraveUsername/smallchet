@@ -5,14 +5,20 @@ const fs = require("fs").promises;
 const PORT = 10000;
 const HOST = '0.0.0.0';
 
-const server = http.createServer((req, res) => {
-  if (req.url === '/' || req.url === '/index.html') {
-    const html = fs.readFileSync('index.html', 'utf8');
-    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-    res.end(html);
-  } else {
-    res.writeHead(404);
-    res.end();
+const server = http.createServer(async (req, res) => {
+  try {
+    if (req.url === '/' || req.url === '/index.html') {
+      const html = await fs.readFile('index.html', 'utf8');
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.end(html);
+    } else {
+      res.writeHead(404, { 'Content-Type': 'text/plain' });
+      res.end('Not Found');
+    }
+  } catch (error) {
+    console.error('File error:', error);
+    res.writeHead(500);
+    res.end('Server Error');
   }
 });
 
@@ -39,5 +45,6 @@ wss.on("connection", (ws) => {
 server.listen(PORT, HOST, () => {
   console.log(`Server running on http://${HOST}:${PORT}`);
 });
+
 
 
