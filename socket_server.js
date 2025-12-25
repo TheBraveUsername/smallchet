@@ -40,11 +40,22 @@ wss.on("connection", (ws) => {
       console.error('Parse error:', e);
     }
   });
+
+  ws.on("close", () => {
+    console.log("Client disconnected!");
+    const disconnectMsg = { username: "Сервер", text: `${messageData?.username || "Пользователь"} отключился` };
+    wss.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN && client !== ws) {
+        client.send(JSON.stringify(disconnectMsg));
+      }
+    });
+  });
 });
 
 server.listen(PORT, HOST, () => {
   console.log(`Server running on http://${HOST}:${PORT}`);
 });
+
 
 
 
